@@ -36,6 +36,7 @@ func main() {
     client := deepl.NewClient(apiKey)
 
     text := "Hello, world!"
+    //                                 or  ..., english, korean)
     translatedText, err := client.Translate(text, "EN", "KO")
     if err != nil {
         log.Fatalf("Failed to translate text: %v", err)
