@@ -1,25 +1,26 @@
 package deepl
 
 import (
-	"github.com/jarcoal/httpmock"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 	"time"
 )
 
 func TestTranslate(t *testing.T) {
-	// httpmock 활성화
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
-
-	// 모의 응답 설정
-	httpmock.RegisterResponder("POST", "https://api.deepl.com/v2/translate",
-		httpmock.NewStringResponder(200, `{"translations":[{"detected_source_language":"EN","text":"Hallo Welt"}]}`))
+	// 테스트 서버 생성
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// 모의 응답 설정
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(`{"translations":[{"detected_source_language":"EN","text":"Hallo Welt"}]}`))
+	}))
+	defer ts.Close()
 
 	client := &Client{
 		HTTPClient: &http.Client{Timeout: 10 * time.Second},
 		APIKey:     "test-api-key",
-		Host:       "https://api.deepl.com",
+		Host:       ts.URL,
 	}
 
 	translationRequest := TranslationRequest{
