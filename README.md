@@ -34,10 +34,15 @@ import (
 func main() {
     apiKey := "YOUR_DEEPL_API_KEY"
     client := deepl.NewClient(apiKey)
-
-    text := "Hello, world!"
-    //                                 or  ..., English, Korean)
-    translatedText, err := client.Translate(text, "EN", "KO")
+	translationRequest := deepl.NewTranslationRequest(
+		[]string{"Hello world"},
+		"DE",
+		// optional choice
+		deepl.WithSourceLang("EN"),
+		deepl.WithFormality("more"),
+	)
+	
+    translatedText, err := client.Translate(translationRequest)
     if err != nil {
         log.Fatalf("Failed to translate text: %v", err)
     }

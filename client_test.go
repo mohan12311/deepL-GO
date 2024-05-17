@@ -26,10 +26,12 @@ func TestTranslate(t *testing.T) {
 		Host:       ts.URL,
 	}
 
-	translationRequest := TranslationRequest{
-		Text:       []string{"Hello world"},
-		TargetLang: "DE",
-	}
+	translationRequest := NewTranslationRequest(
+		[]string{"Hello world"},
+		"DE",
+		WithSourceLang("EN"),
+		WithFormality("more"),
+	)
 
 	translatedText, err := client.Translate(translationRequest)
 	if err != nil {
