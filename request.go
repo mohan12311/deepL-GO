@@ -16,7 +16,7 @@ type TranslationRequest struct {
 	IgnoreTags         []string `json:"ignore_tags,omitempty"`         // Comma-separated list of XML or HTML tags that indicate text not to be translated. Optional.
 }
 
-func NewTranslationRequest(text []string, targetLang string, options ...func(*TranslationRequest)) *TranslationRequest {
+func NewTranslationRequest(text []string, targetLang string, options ...func(*TranslationRequest)) TranslationRequest {
 	req := &TranslationRequest{
 		Text:       text,
 		TargetLang: targetLang,
@@ -26,7 +26,7 @@ func NewTranslationRequest(text []string, targetLang string, options ...func(*Tr
 		opt(req)
 	}
 
-	return req
+	return *req
 }
 
 // WithSourceLang sets the SourceLang field of the TranslationRequest.
