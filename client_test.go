@@ -13,7 +13,10 @@ func TestTranslate(t *testing.T) {
 		// 모의 응답 설정
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"translations":[{"detected_source_language":"EN","text":"Hallo Welt"}]}`))
+		_, err := w.Write([]byte(`{"translations":[{"detected_source_language":"EN","text":"Hallo Welt"}]}`))
+		if err != nil {
+			t.Fatalf("failed to write response: %v", err)
+		}
 	}))
 	defer ts.Close()
 
