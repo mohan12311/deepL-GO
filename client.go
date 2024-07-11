@@ -10,6 +10,10 @@ import (
 	"time"
 )
 
+const (
+	MARSHAL_ERROR = "failed to marshal request body: "
+)
+
 type Client struct {
 	HTTPClient *http.Client
 	APIKey     string
@@ -42,9 +46,9 @@ func NewClient(c *ClientConfig) *Client {
 
 func getHost(isPremiumMember bool) string {
 	if isPremiumMember {
-		return "https://api.deepl.com"
+		return PREMIUM_MEMBER
 	}
-	return "https://api-free.deepl.com"
+	return FREE_MEMBER
 
 }
 
@@ -52,7 +56,7 @@ func (c *Client) Translate(tr TranslationRequest) (*TranslationResponse, error) 
 
 	reqBody, err := json.Marshal(tr)
 	if err != nil {
-		return nil, fmt.Errorf("failed to marshal request body: %w", err)
+		return nil, fmt.Errorf(MARSHAL_ERROR, err)
 	}
 
 	req, err := http.NewRequest("POST", c.Host+"/v2/translate", bytes.NewBuffer(reqBody))
